@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Содержиимое категории {{category.name}}</title>
+</head>
+<body>
+	<h1>Подкаталоги в категории: {{category.name}}</h1>
+	<table>
+		{% for cat in child_categories %}
+		<tr>
+			<td>
+				<a href="/cat/{{cat.id}}"><img src="{{cat.picture}}"></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<a href="/cat/{{cat.id}}">{{category.name}}</p>
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+
+
+	<hr>
+	<h1>Товар в категории: {{category.name}}</h1>
+	<table>
+		{% for item in items %}
+		<tr>
+			<td>
+				<a href="/item/{{item.id}}" target="_blank">{{item.name}}</a>
+			</td>
+			<td>
+				<p>Цена: {{item.price}} руб.</p>
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+</body>
+</html>

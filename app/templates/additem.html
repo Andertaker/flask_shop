@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Добавление товара</title>
+</head>
+<body>
+	<h1>Добавление товара</h1>
+	<form action="" method="post", name="additem">
+		{{form.hidden_tag()}}
+		<p>Название:</p> {{form.name(size=64)}} <br>
+		<p>Картинка: </p> {{form.picture(size=128)}} <br>
+		<p>Описание: </p> {{form.description(size=1024)}} <br>
+		<p>Цена</p> {{form.price}} <br>
+		<p>Категория</p> {{form.cat_id}} <br>
+		<input type="submit" value="Добавить">
+	</form>
+</body>
+</html>

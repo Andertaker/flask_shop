@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Список категорий</title>
+</head>
+<body>
+	<h1>Категории</h1>
+	<table>
+		{% for category in categories %}
+		
+		<tr>
+			<td>
+				<a href="/cat/{{category.id}}"><img src="{{category.picture}}"></p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<a href="/cat/{{category.id}}">{{category.name}}</p>
+			</td>
+		</tr>
+
+		{% endfor %}
+	</table>
+</body>
+</html>
