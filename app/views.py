@@ -24,8 +24,7 @@ def cat(cat_id):
 	child_categories = models.Category.query.filter(
 		models.Category.parent.endswith(cat_id))
 	items = models.Item.query.filter_by(cat_id = cat_id)
-	return render_template('cat.html', items = items, 
-		category = category,
+	return render_template('cat.html', category = category,
 		child_categories = child_categories)
 
 @app.route('/item/<int:item_id>')

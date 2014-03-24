@@ -6,7 +6,8 @@ class Category(db.Model):
 	name = db.Column(db.String(64))
 	picture = db.Column(db.String(128))
 	parent = db.Column(db.Integer)
-	items = db.relationship('Item', backref = 'item')
+	items = db.relationship('Item', backref = 'cat',
+		lazy = 'dynamic')
 	def __repr__(self):
 		print '%s | %s' % (self.id, self.name)
 

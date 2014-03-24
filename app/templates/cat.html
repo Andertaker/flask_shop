@@ -5,6 +5,7 @@
 	<title>Содержиимое категории {{category.name}}</title>
 </head>
 <body>
+
 	<h1>Подкаталоги в категории: {{category.name}}</h1>
 	<table>
 		{% for cat in child_categories %}
@@ -15,7 +16,7 @@
 		</tr>
 		<tr>
 			<td>
-				<a href="/cat/{{cat.id}}">{{category.name}}</p>
+				<a href="/cat/{{cat.id}}">{{cat.name}}</p>
 			</td>
 		</tr>
 		{% endfor %}
@@ -25,7 +26,7 @@
 	<hr>
 	<h1>Товар в категории: {{category.name}}</h1>
 	<table>
-		{% for item in items %}
+		{% for item in category.items %}
 		<tr>
 			<td>
 				<a href="/item/{{item.id}}" target="_blank">{{item.name}}</a>
