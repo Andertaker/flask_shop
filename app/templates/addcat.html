@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>Добавление категории</title>
+	<script src="static/jquery-1.11.0.min.js"></script>
 </head>
 <body>
 	<h1>Добавление категории</h1>
@@ -13,5 +14,13 @@
 		<p>Родитель: </p> {{form.parent}}
 		<input type="submit" value="Добавить">
 	</form>
+	<script type="text/javascript">
+	$(function(){
+		var all_cat = $.get('/get/all_cat', function() {
+			console.log(all_cat);
+		});
+	});
+
+	</script>
 </body>
 </html>

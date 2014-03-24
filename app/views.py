@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, redirect
+from flask import render_template, redirect, request, jsonify
 from app import app, models, db
 import forms
 
@@ -65,8 +65,16 @@ def additem():
 		return redirect('/succes')
 
 	return render_template('additem.html', form = form)
+@app.route('/get/<obj>')
+def get(obj):
+	if request.is_xhr:
 
-
+		dict_of_req = {
+			'all_cat': [(x.id, x.name) for x in models.Category.query.all()]
+		}
+		return jsonify(result = dict_of_req[obj])
+	else:
+		return 'Request is not xhr'
 def get_ier(category):
 	result = []
 	temp = category
@@ -76,4 +84,3 @@ def get_ier(category):
 	result.append(temp)
 	result.reverse()
 	return result
-
