@@ -5,7 +5,9 @@
 	<title>Содержиимое категории {{category.name}}</title>
 </head>
 <body>
-
+	{% for c in tree_cat %}
+	<a href="/cat/{{c.id}}">{{c.name}}</a> <b>></b>
+	{% endfor %}
 	<h1>Подкаталоги в категории: {{category.name}}</h1>
 	<table>
 		{% for cat in child_categories %}

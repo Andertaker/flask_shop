@@ -24,10 +24,11 @@ def cat(cat_id):
 	child_categories = models.Category.query.filter(
 		models.Category.parent.endswith(cat_id))
 	items = models.Item.query.filter_by(cat_id = cat_id)
+	tree_cat = get_ier(category)
 	return render_template('cat.html', category = category,
-		child_categories = child_categories)
+		child_categories = child_categories, tree_cat = tree_cat)
 
-	
+
 
 @app.route('/item/<int:item_id>')
 def item(item_id):
@@ -64,3 +65,15 @@ def additem():
 		return redirect('/succes')
 
 	return render_template('additem.html', form = form)
+
+
+def get_ier(category):
+	result = []
+	temp = category
+	while temp.level != 1:
+		result.append(temp)
+		temp = models.Category.query.get(temp.parent)
+	result.append(temp)
+	result.reverse()
+	return result
+
