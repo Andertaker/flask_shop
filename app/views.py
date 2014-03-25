@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, redirect, request, jsonify
-from app import app, models, db
+from app import app, db, models
 import forms
 
 @app.errorhandler(404)
@@ -29,6 +29,24 @@ def cat(cat_id):
 		child_categories = child_categories, tree_cat = tree_cat)
 
 
+@app.route('/addoption', methods = ['GET', 'POST'])
+def addoption():
+	form = forms.FormAddOption()
+	if request.method == 'POST':
+		c = models.Options(name = u'' + form.name.data,
+			description = u'' + form.description.data,
+			type_option = u'' + form.type_option.data,
+			text_field = u'' + form.text_field.data,
+			int_field = form.int_field.data,
+			float_field = form.float_field.data,
+			checkbox = u'' + form.checkbox.data,
+			unit = u'' + form.unit.data)
+
+		db.session.add(c)
+		db.session.commit()
+		return redirect('/succes')
+	else:
+		return render_template('addoption.html', form = form)
 
 @app.route('/item/<int:item_id>')
 def item(item_id):
@@ -65,12 +83,15 @@ def additem():
 		return redirect('/succes')
 
 	return render_template('additem.html', form = form)
+
+
 @app.route('/get/<obj>')
 def get(obj):
 	if request.is_xhr:
 
 		dict_of_req = {
-			'all_cat': [(x.id, x.name) for x in models.Category.query.all()]
+			'all_cat': [{'id': x.id, 'name': x.name, 'picture': x.picture, 'parent': x.parent} for x in models.Category.query.all()],
+			
 		}
 		return jsonify(result = dict_of_req[obj])
 	else:
