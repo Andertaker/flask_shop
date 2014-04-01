@@ -20,6 +20,7 @@ class FormAddCategory(Form):
     parent = SelectField(u'Родительская категория', coerce=int, choices=cat_list)
 
 
+
 class FormAddItem(Form):
     name = TextField(u'Название товара', validators=[
         v.Required(),
@@ -37,13 +38,14 @@ class FormAddItem(Form):
 
 
 class FormAddOption(Form):
-    type_list = [u'text', u'int', u'float', u'checkbox']
-    type_list = [(x, x) for x in type_list]
-    name = TextField('name')
-    description = TextField('description')
-    type_option = SelectField('type_option', choices=type_list, coerce=str)
-    text_field = TextField('text_field')
-    int_field = IntegerField('int_field')
-    float_field = FloatField('float_field')
-    checkbox = TextField('checkbox')
-    unit = TextField('unit')
+    name = TextField(u'Название опции', validators=[
+        v.Required(),
+        ])
+    description = TextField(u'Описание', validators=[
+        v.Optional(),
+        v.Length(max=512),
+    ])
+    type_option = SelectField('option_type', validators=[v.Required()], choices=[(1, u'INT'), (2, u'TEXT')], coerce=int)
+
+
+

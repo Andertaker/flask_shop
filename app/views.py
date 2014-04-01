@@ -34,26 +34,6 @@ def cat(cat_id):
                            tree_cat=tree_cat)
 
 
-@app.route('/addoption', methods=['GET', 'POST'])
-def addoption():
-    form = forms.FormAddOption()
-    if request.method == 'POST':
-        c = models.Options(name=u'' + form.name.data,
-                           description=u'' + form.description.data,
-                           type_option=u'' + form.type_option.data,
-                           text_field=u'' + form.text_field.data,
-                           int_field=form.int_field.data,
-                           float_field=form.float_field.data,
-                           checkbox=u'' + form.checkbox.data,
-                           unit=u'' + form.unit.data)
-
-        db.session.add(c)
-        db.session.commit()
-        return redirect(url_for('success'))
-    else:
-        return render_template('addoption.html', form=form)
-
-
 @app.route('/item/<int:item_id>')
 def item(item_id):
     item = models.Item.query.get(item_id)
@@ -64,6 +44,7 @@ def item(item_id):
 def addcategory():
     form = forms.FormAddCategory()
     if form.validate_on_submit():
+        print 'dfsfd'
         if form.parent.data == 0:
             level = 1
         else:
@@ -77,6 +58,27 @@ def addcategory():
         db.session.commit()
         return redirect(url_for('success'))
     return render_template('addcat.html', form=form)
+
+@app.route('/addoption', methods=['GET', 'POST'])
+def addoption():
+    form = forms.FormAddOption()
+    if form.validate_on_submit():
+
+        if form.type_option.data == 1:
+            print '++++++!++++++1+++++++++'
+            c = models.OptionsValueInt(  name=u'%s' % form.name.data,
+                                        description=u'%s' % form.description.data)
+
+        elif form.type_option.data == 2:
+            c = models.OptionsValueText(  name=u'%s' % form.name.data,
+                                        description=u'%s' % form.description.data)
+        else:
+            print 'no'
+        db.session.add(c)
+        db.session.commit()
+        return redirect(url_for('succes'))
+    return render_template('addoption.html', form=form)
+
 
 
 @app.route('/additem', methods=['GET', 'POST'])

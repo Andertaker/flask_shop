@@ -27,20 +27,38 @@ class Item(db.Model):
         print '%s | %s' % (self.id, self.name)
 
 
-class Options(db.Model):
+class OptionRelText(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
+    cat_id = db.Column(db.Integer)
+    option_id = db.Column(db.Integer)
+
+class OptionRelInt(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cat_id = db.Column(db.Integer)
+    option_id = db.Column(db.Integer)
+
+
+class OptionsValueText(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.String(64)
     description = db.Column(db.String(512))
-    type_option = db.Column(db.String)
-    text_field = db.Column(db.String(64))
-    int_field = db.Column(db.Integer)
-    float_field = db.Column(db.Float)
-    checkbox = db.Column(db.String(128))
-    unit = db.Column(db.String(64))
 
-
-class OptionRel(db.Model):
+class OptionsValueInt(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    id_option = db.Column(db.Integer, db.ForeignKey('options.id'))
-    id_cat = db.Column(db.Integer, db.ForeignKey('category.id'))
+    name = db.String(64)
+    description = db.Column(db.String(512))
+
+
+class OptionsDataText(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    item_id = db.Column(db.Integer)
+    options_id = db.Column(db.Integer)
+    value = db.Column(db.String)
+
+class OptionsDataInt(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    item_id = db.Column(db.Integer)
+    options_id = db.Column(db.Integer)
+    value = db.Column(db.Integer)
+
 
