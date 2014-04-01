@@ -8,18 +8,16 @@
 	<h1>Категории</h1>
 	<table>
 		{% for category in categories %}
-		
 		<tr>
 			<td>
-				<a href="/cat/{{category.id}}"><img src="{{category.picture}}"></p>
+				<a href="/cat/{{ category.id }}"><img src="{{ category.picture }}"></a>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<a href="/cat/{{category.id}}">{{category.name}}</p>
+				<a href="/cat/{{ category.id }}">{{ category.name }}</a>
 			</td>
 		</tr>
-
 		{% endfor %}
 	</table>
 </body>
