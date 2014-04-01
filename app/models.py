@@ -48,6 +48,10 @@ class OptionsValueInt(db.Model):
     name = db.String(64)
     description = db.Column(db.String(512))
 
+class OptionsValueFloat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.String(64)
+    description = db.Column(db.String(512))
 
 class OptionsDataText(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -61,4 +65,9 @@ class OptionsDataInt(db.Model):
     options_id = db.Column(db.Integer)
     value = db.Column(db.Integer)
 
+class OptionsDataFloat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    item_id = db.Column(db.Integer)
+    options_id = db.Column(db.Integer)
+    value = db.Column(db.Float)
 

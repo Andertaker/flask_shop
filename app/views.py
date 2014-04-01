@@ -65,20 +65,22 @@ def addoption():
     if form.validate_on_submit():
 
         if form.type_option.data == 1:
-            print '++++++!++++++1+++++++++'
             c = models.OptionsValueInt(  name=u'%s' % form.name.data,
                                         description=u'%s' % form.description.data)
 
         elif form.type_option.data == 2:
             c = models.OptionsValueText(  name=u'%s' % form.name.data,
                                         description=u'%s' % form.description.data)
+        elif form.type_option.data == 3:
+            c = models.OptionsValueFloat(  name=u'%s' % form.name.data,
+                                        description=u'%s' % form.description.data)
+        
         else:
             print 'no'
         db.session.add(c)
         db.session.commit()
         return redirect(url_for('succes'))
     return render_template('addoption.html', form=form)
-
 
 
 @app.route('/additem', methods=['GET', 'POST'])
@@ -104,11 +106,18 @@ def get(obj):
         dict_of_req = {
             'all_cat': [{'id': x.id, 'name': x.name, 'picture': x.picture, 'parent': x.parent}
                         for x in models.Category.query.all()],
+            'all_option': [{'id': x.id, 'name': x.name, 'description': x.description} for x in get_option()]
         }
         return jsonify(result=dict_of_req[obj])
     else:
         return 'Request is not xhr'
 
+
+def get_option():
+    result = []
+    result.append(models.OptionsValueText.query.all())
+    result.append(models.OptionsValueInt.query.all())
+    return result[0] + result[1]
 
 def get_ier(category):
     result = []
