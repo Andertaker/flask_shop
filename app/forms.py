@@ -47,10 +47,10 @@ class FormAddOption(Form):
         v.Regexp('^[\w\ \-]+$', flags=re.UNICODE)
         ])
     param_type = SelectField(u'param_type', choices=[
-        (1, u'Текст'),
-        (2, u'Целое число'),
-        (3, u'Дробное число'),
-        (4, u'Список')
+        ('Text', u'Текст'),
+        ('Integer', u'Целое число'),
+        ('Float', u'Дробное число'),
+        ('List', u'Список')
         ])
     values = TextField(u'Список значений', validators = [
         v.Required(),
@@ -62,4 +62,3 @@ class FormAddOption(Form):
         v.Regexp('^[\w\ \-]+$', flags=re.UNICODE)])
     min = IntegerField(u'Мин.')
     max = IntegerField(u'Макс.')
-    to_filter = BooleanField()

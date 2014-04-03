@@ -62,6 +62,18 @@ def addcategory():
 @app.route('/addoption', methods=['GET', 'POST'])
 def addoption():
     form = forms.FormAddOption()
+    if form.validate_on_submit():
+        c = models.CatalogParam(
+            name = u'%s' % form.name.data,
+            description = u'%s' % form.description.data,
+            param_type = u'%s' % form.param_type.data,
+            values = u'%s' % form.values.data,
+            dimension = u'%s' % form.dimension.data,
+            min = u'%s' % form.min.data,
+            max = u'%s' % form.max.data)
+        db.session.add(c)
+        db.session.commit()
+        return redirect(url_for('success'))
     return render_template('addoption.html', form=form)
 
 
