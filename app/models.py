@@ -28,13 +28,13 @@ class Item(db.Model):
 
 class CatalogParam(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    description = db.Column(db.String(512))
+    name = db.Column(db.String(64), nullable=False)
+    description = db.Column(db.String(512), nullable=True)
     param_type = db.Column(db.Enum, u'Text', u'Integer', u'Float', u'Bool')
-    values = db.Column(db.String(256))
+    values = db.Column(db.String(256), nullable=True)
     dimension = db.Column(db.String(8))
-    min = db.Column(db.Integer)
-    max = db.Column(db.Integer)
+    min = db.Column(db.Integer, nullable=True)
+    max = db.Column(db.Integer, nullable=True)
     to_filter = db.Column(db.Bool)
 
 class ParamRel(db.Model):
