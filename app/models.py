@@ -26,48 +26,26 @@ class Item(db.Model):
     def __repr__(self):
         print '%s | %s' % (self.id, self.name)
 
+class CatalogParam(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    description = db.Column(db.String(512))
+    param_type = db.Column(db.Enum, u'Text', u'Integer', u'Float', u'Bool')
+    values = db.Column(db.String(128))
+    dimension = db.Column(db.String(8))
+    min = db.Column(db.Integer)
+    max = db.Column(db.Integer)
+    to_filter = db.Column(db.Bool)
 
-class OptionRelText(db.Model):
+class ParamRel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cat_id = db.Column(db.Integer)
-    option_id = db.Column(db.Integer)
+    param_id = db.Column(db.Integer)
 
-class OptionRelInt(db.Model):
+class ParamValue(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    cat_id = db.Column(db.Integer)
-    option_id = db.Column(db.Integer)
-
-
-class OptionsValueText(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    description = db.Column(db.String(512))
-
-class OptionsValueInt(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    description = db.Column(db.String(512))
-
-class OptionsValueFloat(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    description = db.Column(db.String(512))
-
-class OptionsDataText(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    value_text = db.Column(db.String(64))
+    value_int = db.Column(db.Integer)
+    value_float = db.Column(db.Float)
+    value_bool = db.Column(db.Boolean)
     item_id = db.Column(db.Integer)
-    options_id = db.Column(db.Integer)
-    value = db.Column(db.String)
-
-class OptionsDataInt(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    item_id = db.Column(db.Integer)
-    options_id = db.Column(db.Integer)
-    value = db.Column(db.Integer)
-
-class OptionsDataFloat(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    item_id = db.Column(db.Integer)
-    options_id = db.Column(db.Integer)
-    value = db.Column(db.Float)
-
