@@ -31,7 +31,7 @@ class CatalogParam(db.Model):
     name = db.Column(db.String(64))
     description = db.Column(db.String(512))
     param_type = db.Column(db.Enum, u'Text', u'Integer', u'Float', u'Bool')
-    values = db.Column(db.String(128))
+    values = db.Column(db.String(256))
     dimension = db.Column(db.String(8))
     min = db.Column(db.Integer)
     max = db.Column(db.Integer)

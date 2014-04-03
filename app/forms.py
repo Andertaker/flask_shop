@@ -33,18 +33,33 @@ class FormAddItem(Form):
     description = TextField(u'Описание', validators=[v.Optional()])
     price = IntegerField(u'Цена', validators=[v.Required()])
     cat_list = [(x.id, x.name) for x in models.Category.query.all()]
-    cat_id = SelectField('cat_id', validators=[v.Required()], choices=cat_list, coerce=int)
+    cat_id = SelectField(u'cat_id', validators=[v.Required()], choices=cat_list, coerce=int)
 
 
 class FormAddOption(Form):
-    name = TextField(u'Название опции', validators=[
+    name = TextField(u'Название', validators = [
         v.Required(),
-        ])
+        v.Length(max=64), 
+        v.Regexp('^[\w\ \-]+$', flags=re.UNICODE)])
     description = TextField(u'Описание', validators=[
-        v.Optional(),
+        v.Optional(), 
         v.Length(max=512),
-    ])
-    type_option = SelectField('option_type', validators=[v.Required()], choices=[(1, u'INT'), (2, u'TEXT'), (3, u'FLOAT')], coerce=int)
-
-
-
+        v.Regexp('^[\w\ \-]+$', flags=re.UNICODE)
+        ])
+    param_type = SelectField(u'param_type', choices=[
+        (1, u'Текст'),
+        (2, u'Целое число'),
+        (3, u'Дробное число'),
+        (4, u'Список')
+        ])
+    values = TextField(u'Список значений', validators = [
+        v.Required(),
+        v.Length(max=128), 
+        v.Regexp('^[\w\ \-]+$', flags=re.UNICODE)])
+    dimension = TextField(u'Ед. Измерения', validators = [
+        v.Required(),
+        v.Length(max=8), 
+        v.Regexp('^[\w\ \-]+$', flags=re.UNICODE)])
+    min = IntegerField(u'Мин.')
+    max = IntegerField(u'Макс.')
+    to_filter = BooleanField()
