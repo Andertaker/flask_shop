@@ -40,17 +40,17 @@ class OptionRelInt(db.Model):
 
 class OptionsValueText(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.String(64)
+    name = db.Column(db.String(64))
     description = db.Column(db.String(512))
 
 class OptionsValueInt(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.String(64)
+    name = db.Column(db.String(64))
     description = db.Column(db.String(512))
 
 class OptionsValueFloat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.String(64)
+    name = db.Column(db.String(64))
     description = db.Column(db.String(512))
 
 class OptionsDataText(db.Model):

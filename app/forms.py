@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import re
 from flask.ext.wtf import Form
-from wtforms import TextField, SelectField, IntegerField, FloatField, validators as v
+from wtforms import BooleanField, TextField, SelectField, IntegerField, FloatField, SelectMultipleField, validators as v
 import models
-
+import get
 
 class FormAddCategory(Form):
     name = TextField(u'Название категории', validators=[
@@ -18,7 +18,6 @@ class FormAddCategory(Form):
     cat_list = [(x.id, x.name) for x in models.Category.query.all()]
     cat_list.append((0, u'Нет родителя'))
     parent = SelectField(u'Родительская категория', coerce=int, choices=cat_list)
-
 
 
 class FormAddItem(Form):
@@ -45,7 +44,7 @@ class FormAddOption(Form):
         v.Optional(),
         v.Length(max=512),
     ])
-    type_option = SelectField('option_type', validators=[v.Required()], choices=[(1, u'INT'), (2, u'TEXT')], coerce=int)
+    type_option = SelectField('option_type', validators=[v.Required()], choices=[(1, u'INT'), (2, u'TEXT'), (3, u'FLOAT')], coerce=int)
 
 
 

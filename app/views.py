@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, redirect, request, jsonify, url_for
 from app import app, db, models, forms
-
+import get
 
 @app.errorhandler(404)
 def error404(err):
@@ -79,7 +79,7 @@ def addoption():
             print 'no'
         db.session.add(c)
         db.session.commit()
-        return redirect(url_for('succes'))
+        return redirect(url_for('success'))
     return render_template('addoption.html', form=form)
 
 
@@ -106,7 +106,7 @@ def get(obj):
         dict_of_req = {
             'all_cat': [{'id': x.id, 'name': x.name, 'picture': x.picture, 'parent': x.parent}
                         for x in models.Category.query.all()],
-            'all_option': [{'id': x.id, 'name': x.name, 'description': x.description} for x in get_option()]
+            'all_options': get.all_options()
         }
         return jsonify(result=dict_of_req[obj])
     else:

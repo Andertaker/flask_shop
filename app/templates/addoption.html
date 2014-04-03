@@ -3,7 +3,9 @@
 <head>
 	<meta charset="utf-8">
 	<title>Добавление Опции</title>
-	<script src="static/jquery-1.11.0.min.js"></script>
+	<script type=text/javascript src="{{
+  url_for('static', filename='jquery.js') }}"></script>
+
 </head>
 <body>
 	<h1>Добавление опции</h1>
@@ -14,5 +16,17 @@
 		<p>Тип: </p> {{form.type_option}}
 		<input type="submit" value="Добавить">
 	</form>
+	<script type="text/javascript">
+	$(function() {
+		$('a#get_options').bind('click', function() {
+			$.getJSON('http://localhost:5000/get/all_options', function(data) {
+				console.log(data);
+			});
+			return false;
+		});
+	});
+	</script>
+	<a href=# id=get_options>get_options</a>
+
 </body>
 </html>
