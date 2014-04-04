@@ -50,9 +50,7 @@ class FormAddOption(Form):
         v.Length(max=64), 
         v.Regexp('^[\w\ \-]+$', flags=re.UNICODE)])
     description = TextField(u'Описание', validators=[
-        v.Optional(), 
         v.Length(max=512),
-        v.Regexp('^[\w\ \-]+$', flags=re.UNICODE)
         ])
     param_type = SelectField(u'param_type', choices=[
         ('Text', u'Текст'),
@@ -61,12 +59,8 @@ class FormAddOption(Form):
         ('List', u'Список')
         ])
     values = TextField(u'Список значений', validators = [
-        v.Required(),
-        v.Length(max=128), 
-        v.Regexp('^[\w\ \-]+$', flags=re.UNICODE)])
+        v.Length(max=128)])
     dimension = TextField(u'Ед. Измерения', validators = [
-        v.Required(),
-        v.Length(max=8), 
-        v.Regexp('^[\w\ \-]+$', flags=re.UNICODE)])
-    min = IntegerField(u'Мин.')
-    max = IntegerField(u'Макс.')
+        v.Length(max=8)])
+    min = IntegerField(u'Мин.', validators=[v.Optional()])
+    max = IntegerField(u'Макс.', validators=[v.Optional()])
