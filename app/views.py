@@ -27,11 +27,14 @@ def cat(cat_id):
     child_categories = models.Category.query.filter(
         models.Category.parent.endswith(cat_id))
     items = models.Item.query.filter_by(cat_id=cat_id)  # TODO
+    options = [(models.CatalogParam.query.get(x.param_id)) for x in category.options]
+
+
     tree_cat = get_ier(category)
     return render_template('cat.html',
                            category=category,
                            child_categories=child_categories,
-                           tree_cat=tree_cat)
+                           tree_cat=tree_cat, options=options)
 
 
 @app.route('/item/<int:item_id>')

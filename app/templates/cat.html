@@ -41,8 +41,11 @@
 	</table>
 
 	<h1>Опции</h1>
-	{% for option in category.options %}
+	{% for option in options %}
 		<p>{{option.id}}</p>
+		<p>{{option.name}}</p>
+		<p>{{option.description}}</p>
+		<hr>
 	{% endfor %}
 </body>
 </html>
