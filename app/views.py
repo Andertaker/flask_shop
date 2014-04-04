@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, redirect, request, jsonify, url_for
 from app import app, db, models, forms
-import get
+import gets
 
 @app.errorhandler(404)
 def error404(err):
@@ -44,11 +44,13 @@ def item(item_id):
 def addcategory():
     form = forms.FormAddCategory()
     if form.validate_on_submit():
-        print 'dfsfd'
         if form.parent.data == 0:
             level = 1
         else:
             level = models.Category.query.get(form.parent.data).level + 1
+        
+        params = [int(x) for x in form.params.data.split('|')]
+        print params
         c = models.Category(name=u'%s' % form.name.data,
                             picture=u'%s' % form.picture.data,
                             parent=form.parent.data,
@@ -56,6 +58,12 @@ def addcategory():
                             )
         db.session.add(c)
         db.session.commit()
+        temp = c.id #здесь храним id только что созданной категории
+        for param in params:
+            c = models.ParamRel(cat_id=temp, param_id=param)
+            db.session.add(c)
+            db.session.commit()
+
         return redirect(url_for('success'))
     return render_template('addcat.html', form=form)
 
@@ -93,6 +101,12 @@ def additem():
     return render_template('additem.html', form=form)
 
 
+
+
+@app.route('/tests')
+def tests():
+    a = gets.options_by_cat_id(7)
+    print a
 @app.route('/get/<obj>')
 def get(obj):
     if request.is_xhr:
@@ -100,7 +114,7 @@ def get(obj):
         dict_of_req = {
             'all_cat': [{'id': x.id, 'name': x.name, 'picture': x.picture, 'parent': x.parent}
                         for x in models.Category.query.all()],
-            'all_options': get.all_options()
+            'all_options': gets.all_options()
         }
         return jsonify(result=dict_of_req[obj])
     else:

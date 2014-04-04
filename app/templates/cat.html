@@ -39,5 +39,10 @@
 		</tr>
 		{% endfor %}
 	</table>
+
+	<h1>Опции</h1>
+	{% for option in category.options %}
+		<p>{{option.id}}</p>
+	{% endfor %}
 </body>
 </html>

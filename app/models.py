@@ -9,8 +9,7 @@ class Category(db.Model):
     parent = db.Column(db.Integer)
     level = db.Column(db.Integer)
     items = db.relationship('Item', backref='cat', lazy='dynamic')
-    #options = db.relationship('OptionRel', backref='options')
-
+    options = db.relationship('ParamRel', backref='pr', lazy='dynamic')
     def __repr__(self):
         print '%s | %s' % (self.id, self.name)
 
@@ -39,8 +38,9 @@ class CatalogParam(db.Model):
 
 class ParamRel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    cat_id = db.Column(db.Integer)
+    cat_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     param_id = db.Column(db.Integer)
+
 
 class ParamValue(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -6,3 +6,7 @@ def all_options():
     text_options = [(x.id, x.name, x.description) for x in models.OptionsValueText.query.all()]
     float_options = [(x.id, x.name, x.description) for x in models.OptionsValueFloat.query.all()]
     return {'INT': int_options, 'TEXT': text_options, 'FLOAT': float_options}
+
+def options_by_cat_id(id):
+	options_id = models.ParamRel.query.filter_by(cat_id=id)
+	print options_id
