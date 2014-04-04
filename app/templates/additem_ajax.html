@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Добавление товара</title>
+<script type=text/javascript src="{{url_for('static', filename='jquery-2.1.0.min.js') }}"></script>
+</head>
+<body>
+	<h1>Добавление товара (пример ajax запроса)</h1>
+	<script>
+		$(function() {
+			$('a#add').bind('click', function() {
+				$.getJSON('localhost/additem_ajax', {
+        		name: 'имя',
+        		description: 'описание',
+        		cat_id: 1,
+        		price: 12,
+        		options: {
+        			1: {
+        				value_text: 'какой-то текст в опции'
+        			}
+        		}
+      			});
+			});
+		});
+	</script>
+	<a href=# id="add">Добавить</a>
+</body>
+</html>

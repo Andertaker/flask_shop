@@ -21,6 +21,22 @@ def success():
     return render_template('success.html')
 
 
+@app.route('/additem_ajax', methods=['GET', 'POST'])
+def additem_ajax():
+    if request == 'POST':
+        name = request.args.get('name', type=str)
+        description = request.args.get('name', type=str)
+        cat_id = request.args.get('cat_id', type=int)
+        price = request.args.get('price', type=int)
+        options = request.args.get('options')
+        print options
+    else:
+        return render_template('additem_ajax.html')
+
+
+
+
+
 @app.route('/cat/<int:cat_id>')
 def cat(cat_id):
     category = models.Category.query.get(cat_id)
@@ -28,8 +44,6 @@ def cat(cat_id):
         models.Category.parent.endswith(cat_id))
     items = models.Item.query.filter_by(cat_id=cat_id)  # TODO
     options = [(models.CatalogParam.query.get(x.param_id)) for x in category.options]
-
-
     tree_cat = get_ier(category)
     return render_template('cat.html',
                            category=category,
@@ -103,13 +117,6 @@ def additem():
 
     return render_template('additem.html', form=form)
 
-
-
-
-@app.route('/tests')
-def tests():
-    a = gets.options_by_cat_id(7)
-    print a
 @app.route('/get/<obj>')
 def get(obj):
     if request.is_xhr:

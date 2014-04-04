@@ -8,5 +8,5 @@ def all_options():
     return {'INT': int_options, 'TEXT': text_options, 'FLOAT': float_options}
 
 def options_by_cat_id(id):
-	options_id = [(x.id) for x in models.ParamRel.query.filter_by(cat_id=id).all()]
-	return options_id
+	options = [(models.CatalogParam.query.get(x.param_id)) for x in models.Category.query.get(id)]
+	return options
