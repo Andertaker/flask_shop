@@ -49,3 +49,4 @@ class ParamValue(db.Model):
     value_float = db.Column(db.Float)
     value_bool = db.Column(db.Boolean)
     item_id = db.Column(db.Integer)
+    param_id = db.Column(db.Integer)

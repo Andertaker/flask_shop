@@ -8,20 +8,30 @@
 <body>
 	<h1>Добавление товара (пример ajax запроса)</h1>
 	<script>
+		
 		$(function() {
 			$('a#add').bind('click', function() {
-				$.getJSON('localhost/additem_ajax', {
-        		name: 'имя',
-        		description: 'описание',
-        		cat_id: 1,
-        		price: 12,
-        		options: {
-        			1: {
-        				value_text: 'какой-то текст в опции'
-        			}
-        		}
-      			});
+			$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+			$.ajax({
+				type: "POST",
+				url: "/additem_ajax",
+				dataType: "json",
+				data: JSON.stringify( {
+					name: "Котся",
+					price: 32,
+					description: "Котся - это кот по имени котся. Котся играет в танки и работает админом, который рисует в фотошопе дипломы",
+					category: 1,
+					options: {
+						2: {
+							"value_int": 2012
+						},
+						1: {
+							"value_float": 43.5
+						}
+					}})
 			});
+		});
+	
 		});
 	</script>
 	<a href=# id="add">Добавить</a>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, redirect, request, jsonify, url_for
 from app import app, db, models, forms
-import gets
+import gets, json
 
 @app.errorhandler(404)
 def error404(err):
@@ -23,13 +23,39 @@ def success():
 
 @app.route('/additem_ajax', methods=['GET', 'POST'])
 def additem_ajax():
-    if request == 'POST':
-        name = request.args.get('name', type=str)
-        description = request.args.get('name', type=str)
-        cat_id = request.args.get('cat_id', type=int)
-        price = request.args.get('price', type=int)
-        options = request.args.get('options')
-        print options
+    if request.is_xhr:
+        req_json = json.loads(list(request.form)[0])
+        name = req_json['name']
+        price = int(req_json['price'])
+        description = req_json['description']
+        category = int(req_json['category'])
+        c = models.Item(name=u'' + name,
+                        description=u'' + description,
+                        price=price,
+                        cat_id=category)
+        db.session.add(c)
+        db.session.commit()
+        item_id = c.id
+
+        #добавляем опцию к айтему
+        type_options = ['value_text', 'value_int', 'value_float', 'value_bool']
+        for option in req_json['options']:
+            param = {'value_text': '', 'value_int': '', 'value_float': 0, 'value_bool': False}
+            for t in type_options:
+                try:
+                    param[t] = req_json['options'][option][t]
+                except:
+                    pass
+            c = models.ParamValue(value_text = u'' + param['value_text'],
+                                value_float = param['value_float'],
+                                value_int = param['value_int'],
+                                value_bool = param['value_bool'],
+                                item_id = item_id,
+                                param_id = int(option))  
+            db.session.add(c)
+            db.session.commit()  
+
+        return jsonify(result='succes!')
     else:
         return render_template('additem_ajax.html')
 
