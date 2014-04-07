@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 #модуль для получения различных данных из бд
 import models
-from flask import jsonify
 def all_options():
     int_options = [(x.id, x.name, x.description) for x in models.OptionsValueInt.query.all()]
     text_options = [(x.id, x.name, x.description) for x in models.OptionsValueText.query.all()]
@@ -13,7 +12,15 @@ def options_by_cat_id(id):
 	return options
 
 def category(of='undefined'):
-	result = models.Category.query.all()
+	query = models.Category.query.all()
+	result = []
+	for record in query:
+		out = {}
+		out['name'] = record.name
+		out['id'] = record.id
+		result.append(out)
+	return result
+
 
 
 def item(of='undefined'):

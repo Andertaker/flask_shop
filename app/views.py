@@ -151,9 +151,9 @@ def get():
         of = request.args.get('of', 'undefined', type=str)
         group_by = request.args.get('group_by', 'undefined', type=id)
         try:
-            return stypes[obj](of=of)
+            return jsonify(response=types[obj](of=of))
         except:
-            print 'ERROR'
+            return jsonify(response='error')
 
 
         
