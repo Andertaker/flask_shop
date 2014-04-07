@@ -11,7 +11,7 @@ def options_by_cat_id(id):
 	options = [(models.CatalogParam.query.get(x.param_id)) for x in models.Category.query.get(id)]
 	return options
 
-def category(of='undefined'):
+def category(of='undefined', group_by='undefined'):
 	query = models.Category.query.all()
 	result = []
 	for record in query:
@@ -23,8 +23,18 @@ def category(of='undefined'):
 
 
 
-def item(of='undefined'):
+def items(of='undefined', group_by='undefined'):
 	if of == 'undefined':
-		result = models.Item.query.all()
+		query = models.Item.query.all()
 	else:
-		result.models.Item.query.all()
+		query = models.Item.query.filter_by(cat_id=group_by).all()
+	result = []
+	for record in query:
+		out = {}
+		out['name'] = record.name
+		out['id'] = record.id
+		out['parent_id'] = record.cat_id 
+		out['description'] = record.description
+		out['price'] = record.price
+		result.append(out)
+	return result

@@ -145,13 +145,14 @@ def additem():
 
 @app.route('/get', methods=['GET'])
 def get():
-    types = {'category': gets.category}
+    types = {'category': gets.category,
+            'items': gets.items}
     if request.is_xhr:
         obj = request.args.get('obj', 'undefined', type=str)
         of = request.args.get('of', 'undefined', type=str)
         group_by = request.args.get('group_by', 'undefined', type=id)
         try:
-            return jsonify(response=types[obj](of=of))
+            return jsonify(response=types[obj](of=of, group_by=group_by))
         except:
             return jsonify(response='error')
 
