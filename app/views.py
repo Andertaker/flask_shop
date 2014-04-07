@@ -143,18 +143,21 @@ def additem():
 
     return render_template('additem.html', form=form)
 
-@app.route('/get/<obj>')
-def get(obj):
+@app.route('/get', methods=['GET'])
+def get():
+    types = {'category': gets.category}
     if request.is_xhr:
+        obj = request.args.get('obj', 'undefined', type=str)
+        of = request.args.get('of', 'undefined', type=str)
+        group_by = request.args.get('group_by', 'undefined', type=id)
+        try:
+            return stypes[obj](of=of)
+        except:
+            print 'ERROR'
 
-        dict_of_req = {
-            'all_cat': [{'id': x.id, 'name': x.name, 'picture': x.picture, 'parent': x.parent}
-                        for x in models.Category.query.all()],
-            'all_options': gets.all_options()
-        }
-        return jsonify(result=dict_of_req[obj])
-    else:
-        return 'Request is not xhr'
+
+        
+
 
 
 def get_option():
@@ -172,3 +175,8 @@ def get_ier(category):
     result.append(temp)
     result.reverse()
     return result
+
+
+@app.route('/testget')
+def testget():
+    return render_template('gettest.html')
