@@ -168,7 +168,7 @@ def api(method):
         'category': api_catalog.category,
         'items': api_catalog.item}
 
-    if 1>0:
+    if request.is_xhr:
         dict_of_args = {
             'id': request.args.get('id', None, type=int),
             'parent': request.args.get('parent', None, type=int),
@@ -178,7 +178,6 @@ def api(method):
             'max_price': request.args.get('max_price', 9999999, type=int)
         }
         return jsonify(response=methods[method](dict_of_args))
-        
     else:
         return 'NOT AJAX!'
 
