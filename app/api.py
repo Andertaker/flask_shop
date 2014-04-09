@@ -1,22 +1,18 @@
 # -*- coding: utf-8 -*-
 import models
 
+
 def category(dict_of_args):
 	try:
-		query = models.Category.query.get(int(dict_of_args['id']))
-		result = [{
-				'name': query.name, 
-				'id': query.id,
-				'parent': query.parent
-				}]
-		return result
-	except:
-		return 'Error'
-	
-def category_all(dict_of_args):
-	query = models.Category.query.get()
-	try:
-		query = models.Category.query.all()
+		if dict_of_args['id'] != None:
+			query = models.Category.query.get(dict_of_args['id'])
+		elif dict_of_args['id'] == None and dict_of_args['parent'] == None:
+			query = models.Category.query.all()
+		elif dict_of_args['id'] == None and dict_of_args['parent'] != None:
+			query = models.Category.query.filter_by(parent=dict_of_args['parent']).all()
+		else:
+			query = models.Category.query.all()
+
 		result = []
 		for record in query:
 			out = {}
@@ -28,11 +24,12 @@ def category_all(dict_of_args):
 	except:
 		return 'Error'
 
+
 def item(dict_of_args):
 	if dict_of_args['id'] != None:
 		query = models.Item.query.get(id)
 	elif dict_of_args['category_id'] != None:
-		query = models.Item.query.filter_by(cat_id=category_id)
+		query = models.Item.query.filter_by(cat_id=category_id).filter_by(price<=dict_of_args['max_price']).filter_by(price>=dict_of_args['min_price']).all()
 	result = []
 	try:
 		for record in query:
@@ -42,6 +39,7 @@ def item(dict_of_args):
 			out['price'] = record.price
 			out['cat_id'] = record.cat_id
 			out['picture'] = record.picture
+			out['description'] = record.description
 			result.append(out)
 		return result
 	except:

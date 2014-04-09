@@ -7,7 +7,6 @@ import gets, json, api
 def error404(err):
     return render_template('404.html'), 404
 
-
 @app.route('/')
 @app.route('/index')
 def index():
@@ -15,11 +14,9 @@ def index():
         models.Category.parent.endswith(0)).all()
     return render_template('index.html', categories=cat)
 
-
 @app.route('/success')
 def success():
     return render_template('success.html')
-
 
 @app.route('/additem_ajax', methods=['GET', 'POST'])
 def additem_ajax():
@@ -59,10 +56,6 @@ def additem_ajax():
     else:
         return render_template('additem_ajax.html')
 
-
-
-
-
 @app.route('/cat/<int:cat_id>')
 def cat(cat_id):
     category = models.Category.query.get(cat_id)
@@ -76,12 +69,10 @@ def cat(cat_id):
                            child_categories=child_categories,
                            tree_cat=tree_cat, options=options)
 
-
 @app.route('/item/<int:item_id>')
 def item(item_id):
     item = models.Item.query.get(item_id)
     return render_template('item.html', item=item)
-
 
 @app.route('/addcategory', methods=['GET', 'POST'])
 def addcategory():
@@ -127,7 +118,6 @@ def addoption():
         return redirect(url_for('success'))
     return render_template('addoption.html', form=form)
 
-
 @app.route('/additem', methods=['GET', 'POST'])
 def additem():
     form = forms.FormAddItem()
@@ -156,11 +146,6 @@ def get():
         except:
             return jsonify(response='error')
 
-
-        
-
-
-
 def get_option():
     result = []
     result.append(models.OptionsValueText.query.all())
@@ -177,7 +162,6 @@ def get_ier(category):
     result.reverse()
     return result
 
-
 @app.route('/api/<string:method>')
 def api(method):
     methods = {
@@ -190,7 +174,9 @@ def api(method):
             'id': request.args.get('id', None, type=int),
             'parent': request.args.get('parent', None, type=int),
             'options': request.args.get('options', None, type=int),
-            'category_id': request.args.get('category_id', None, type=int)
+            'category_id': request.args.get('category_id', None, type=int),
+            'min_price': request.args.get('min_price', 0, type=int),
+            'max_price': request.args.get('max_price', 9999999, type=int)
         }
         try:
             return jsonify(response=methods[method](dict_of_args))
