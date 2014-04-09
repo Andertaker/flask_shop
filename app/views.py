@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, redirect, request, jsonify, url_for
 from app import app, db, models, forms
-import gets, json, api
+import gets, json, api_catalog
 
 @app.errorhandler(404)
 def error404(err):
@@ -165,11 +165,10 @@ def get_ier(category):
 @app.route('/api/<string:method>')
 def api(method):
     methods = {
-        'category': api.category,
-        'category_all': api.category_all,
-        'items': api.item}
+        'category': api_catalog.category,
+        'items': api_catalog.item}
 
-    if request.is_xhr:
+    if 1>0:
         dict_of_args = {
             'id': request.args.get('id', None, type=int),
             'parent': request.args.get('parent', None, type=int),
@@ -178,10 +177,8 @@ def api(method):
             'min_price': request.args.get('min_price', 0, type=int),
             'max_price': request.args.get('max_price', 9999999, type=int)
         }
-        try:
-            return jsonify(response=methods[method](dict_of_args))
-        except:
-            return 'Error'
+        return jsonify(response=methods[method](dict_of_args))
+        
     else:
         return 'NOT AJAX!'
 
