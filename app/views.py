@@ -126,7 +126,9 @@ def additem():
                         picture=form.picture.data,
                         description=u'' + form.description.data,
                         price=form.price.data,
-                        cat_id=form.cat_id.data)
+                        cat_id=form.cat_id.data, 
+                        counter_warehouse = form.counter_warehouse.data,
+                        counter_shop = form.counter_shop.data)
         db.session.add(c)
         db.session.commit()
         return redirect(url_for('success'))

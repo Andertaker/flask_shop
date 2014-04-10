@@ -20,6 +20,8 @@ class Item(db.Model):
     picture = db.Column(db.String(128))
     description = db.Column(db.String(1024))
     price = db.Column(db.Integer)
+    counter_warehouse = db.Column(db.Integer) # кол-во на складе
+    counter_shop = db.Column(db.Integer) #кол-во в магазине
     cat_id = db.Column(db.Integer, db.ForeignKey('category.id'))
 
     def __repr__(self):

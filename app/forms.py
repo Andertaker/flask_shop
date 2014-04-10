@@ -38,7 +38,8 @@ class FormAddItem(Form):
     price = IntegerField(u'Цена', validators=[v.Required()])
     cat_list = [(x.id, x.name) for x in models.Category.query.all()]
     cat_id = SelectField(u'cat_id', validators=[v.Required()], choices=cat_list, coerce=int)
-
+    counter_warehouse = IntegerField('Кол-во на складе')
+    counter_shop = IntegerField('Кол-во в магазине')
 
 class FormAddOption(Form):
     name = TextField(u'Название', validators = [
