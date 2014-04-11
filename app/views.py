@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, redirect, request, jsonify, url_for
 from app import app, db, models, forms
-import gets, json, api_catalog
+import gets
+import json
+#import api_catalog
+
 
 @app.errorhandler(404)
 def error404(err):
     return render_template('404.html'), 404
+
+
+@app.route('/docs/api')
+def docs_api():
+    return render_template('api.html')
+
 
 @app.route('/')
 @app.route('/index')
@@ -14,9 +23,11 @@ def index():
         models.Category.parent.endswith(0)).all()
     return render_template('index.html', categories=cat)
 
+
 @app.route('/success')
 def success():
     return render_template('success.html')
+
 
 @app.route('/additem_ajax', methods=['GET', 'POST'])
 def additem_ajax():
@@ -56,6 +67,7 @@ def additem_ajax():
     else:
         return render_template('additem_ajax.html')
 
+
 @app.route('/cat/<int:cat_id>')
 def cat(cat_id):
     category = models.Category.query.get(cat_id)
@@ -68,6 +80,7 @@ def cat(cat_id):
                            category=category,
                            child_categories=child_categories,
                            tree_cat=tree_cat, options=options)
+
 
 @app.route('/item/<int:item_id>')
 def item(item_id):

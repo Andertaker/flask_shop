@@ -3,6 +3,8 @@ from app import db
 
 
 class Category(db.Model):
+    __tablename__ = 'category'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     picture = db.Column(db.String(128))
@@ -10,22 +12,26 @@ class Category(db.Model):
     level = db.Column(db.Integer)
     items = db.relationship('Item', backref='cat', lazy='dynamic')
     options = db.relationship('ParamRel', backref='pr', lazy='dynamic')
+
     def __repr__(self):
         print '%s | %s' % (self.id, self.name)
 
 
 class Item(db.Model):
+    __tablename__ = 'item'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     picture = db.Column(db.String(128))
     description = db.Column(db.String(1024))
     price = db.Column(db.Integer)
-    counter_warehouse = db.Column(db.Integer) # кол-во на складе
-    counter_shop = db.Column(db.Integer) #кол-во в магазине
+    counter_warehouse = db.Column(db.Integer)  # кол-во на складе
+    counter_shop = db.Column(db.Integer)  # кол-во в магазине
     cat_id = db.Column(db.Integer, db.ForeignKey('category.id'))
 
     def __repr__(self):
         print '%s | %s' % (self.id, self.name)
+
 
 class CatalogParam(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -37,6 +43,7 @@ class CatalogParam(db.Model):
     min = db.Column(db.Integer, nullable=True)
     max = db.Column(db.Integer, nullable=True)
     to_filter = db.Column(db.Boolean)
+
 
 class ParamRel(db.Model):
     id = db.Column(db.Integer, primary_key=True)

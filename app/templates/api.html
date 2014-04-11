@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <title>API JointCMS</title>
+
+  <link href="{{ url_for('static', filename = 'css/bootstrap.min.css') }}" rel="stylesheet">
+  <style>
+  .panel-title > .label {
+    display: inline-block;
+    margin: -10px 5px -6px -10px;
+    padding: 10px 5px 8px;
+    width: 60px;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="clearfix col-xs-12">
+        <h1>REST API v1</h1>
+
+        <h2>Каталог</h2>
+        <div class="panel-group" id="backend-category">
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <span class="label label-primary">GET</span>
+                <a data-toggle="collapse" data-parent="#backend-category" href="#get_category_list">
+                  <code>/backend/category</code>
+                  <span class="pull-right">Получение списка категорий</span>
+                </a>
+              </h4>
+            </div>
+            <div id="get_category_list" class="panel-collapse collapse">
+              <div class="panel-body">
+                <h4>Описание</h4>
+                <p>Получение списка категорий. Функция для view: <code>get_category_list()</code></p>
+                <h4>Авторизация</h4>
+                <p>Нужны права <code>user</code></p>
+                <h4>Параметры запроса</h4>
+                <!-- TODO пагинация:
+                <code>Range: items=0-2</code>
+                -->
+                <h4>Пример ответа</h4>
+<pre>
+[
+  {
+    "id": 1,
+    "alias": "first-category",
+    "name": "Название первой категории",
+    "parent": "0"
+  },
+  {
+    "id": 2,
+    "alias": "sub-category",
+    "name": "Название подкатегории",
+    "parent": "1"
+  },
+]
+</pre>
+                <!-- TODO пагинация:
+                <code class="ok">HTTP/1.1 206 Partial Content<br>Content-Range: items 0-2/3</code>
+                -->
+                <h4>Коды ответов</h4>
+                <table class="table table-condensed table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th>HTTP Status Code</th><th>Описание</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="label label-success">200 OK</span></td><td>Список категорий получен</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+<!--
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <span class="label label-primary">GET</span>
+                <a data-toggle="collapse" data-parent="#backend-category" href="#get_category">
+                  <code>/backend/category/int:category_id</code>
+                  <span class="pull-right">Получение подкатегорий и товаров определённой категории (?)</span>
+                </a>
+              </h4>
+            </div>
+            <div id="get_category" class="panel-collapse collapse">
+              <div class="panel-body">
+                <h4>Описание</h4>
+                <p>Получение категорий по идентификатору и товаров <code>parent_id=category_id</code>. Функция для view: <code>get_category(category_id)</code></p>
+                <h4>Авторизация</h4>
+                <p>Нужны права <code>user</code></p>
+                <h4>Параметры запроса</h4>
+                <table class="table table-condensed table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Параметр</th><th>Тип</th><th>Описание</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td></td><td></td><td></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h4>Коды ответов</h4>
+                <table class="table table-condensed table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th>HTTP Status Code</th><th>Описание</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="label label-success">200 OK</span></td><td>Список категорий и товаров получен</td>
+                    </tr>
+                    <tr>
+                      <td><span class="label label-danger">404 Not Found</span></td><td>Нет такой категории</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+-->
+          <div class="panel panel-success">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <span class="label label-success">POST</span>
+                <a data-toggle="collapse" data-parent="#backend-category" href="#new_category">
+                  <code>/backend/category</code>, <code>/backend/category/int:parent_id</code>
+                  <span class="pull-right">Создание новой категории</span>
+                </a>
+              </h4>
+            </div>
+            <div id="new_category" class="panel-collapse collapse">
+              <div class="panel-body">
+                <h4>Описание</h4>
+                <p>Создание новой категории. Функция для view: <code>new_category(parent_id=0)</code></p>
+                <h4>Авторизация</h4>
+                <p>Нужны права <code>user</code></p>
+                <h4>Параметры запроса</h4>
+                <table class="table table-condensed table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Параметр</th><th>Тип</th><th>Описание</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>name</th><td>string</td><td>Заголовок категории</td>
+                    </tr>
+                    <tr>
+                      <th>body</th><td>text</td><td>Полный текст и описание категории</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <h4>Коды ответов</h4>
+                <table class="table table-condensed table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th>HTTP Status Code</th><th>Описание</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="label label-success">201 Created</span></td><td>Категория создана</td>
+                    </tr>
+                    <tr>
+                      <td><span class="label label-danger">400 Bad Request</span></td><td>Ошибка</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel panel-warning">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <span class="label label-warning">PUT</span>
+                <a data-toggle="collapse" data-parent="#backend-category" href="#update_category">
+                  <code>/backend/category/int:category_id</code>
+                  <span class="pull-right">Обновление категории</span>
+                </a>
+              </h4>
+            </div>
+            <div id="update_category" class="panel-collapse collapse">
+              <div class="panel-body">
+                <h4>Описание</h4>
+                <p>Обновление определённой категории. Функция для view: <code>update_category()</code></p>
+                <h4>Авторизация</h4>
+                <p>Нужны права <code>super_admin</code></p>
+                <h4>Параметры запроса</h4>
+                <table class="table table-condensed table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Параметр</th><th>Тип</th><th>Описание</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>name</th><td>string</td><td>Заголовок категории</td>
+                    </tr>
+                    <tr>
+                      <th>body</th><td>text</td><td>Полный текст и описание категории</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <h4>Коды ответов</h4>
+                <table class="table table-condensed table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th>HTTP Status Code</th><th>Описание</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="label label-success">200 OK</span></td><td>Категория изменена</td>
+                    </tr>
+                    <tr>
+                      <td><span class="label label-danger">404 Not Found</span></td><td>Нет такой категории</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel panel-danger">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <span class="label label-danger">DELETE</span>
+                <a data-toggle="collapse" data-parent="#backend-category" href="#delete_category">
+                  <code>/backend/category/int:category_id</code>
+                  <span class="pull-right">Удаление категории</span>
+                </a>
+              </h4>
+            </div>
+            <div id="delete_category" class="panel-collapse collapse">
+              <div class="panel-body">
+                <h4>Описание</h4>
+                <p>Удаление определённой категории. Функция для view: <code>delete_category()</code></p>
+                <h4>Авторизация</h4>
+                <p>Нужны права <code>super_admin</code></p>
+                <h4>Коды ответов</h4>
+                <table class="table table-condensed table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th>HTTP Status Code</th><th>Описание</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="label label-success">200 OK</span></td><td>Категория удалена</td>
+                    </tr>
+                    <tr>
+                      <td><span class="label label-danger">404 Not Found</span></td><td>Нет такой категории</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <small style="text-align: center; display: block; margin: 10px 0;">Документация для разработчиков. &copy; JokerInteractive 2012-2014</small>
+      </div>
+    </div>
+  </div><!--/.container-->
+
+<!-- RentShop JavaScript
+================================================== -->
+<script src="{{ url_for('static', filename = 'js/jquery-1.11.0.min.js') }}"></script>
+<script src="{{ url_for('static', filename = 'js/bootstrap.min.js') }}"></script>
+</body>
+</html>
