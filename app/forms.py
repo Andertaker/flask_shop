@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import re
 from flask.ext.wtf import Form
-from wtforms import FormField, FieldList, BooleanField, TextField, SelectField, IntegerField, FloatField, SelectMultipleField, validators as v
+from wtforms import FormField, FieldList, BooleanField, TextField, SelectField, IntegerField, FloatField, \
+    SelectMultipleField, validators as v
 import models
 import get
 
-    
 
 class FormAddCategory(Form):
     name = TextField(u'Название категории', validators=[
@@ -21,7 +21,6 @@ class FormAddCategory(Form):
     cat_list.append((0, u'Нет родителя'))
     parent = SelectField(u'Родительская категория', coerce=int, choices=cat_list)
     params = TextField(u'параметры')
-
 
 
 class FormAddItem(Form):
@@ -41,23 +40,24 @@ class FormAddItem(Form):
     counter_warehouse = IntegerField('Кол-во на складе')
     counter_shop = IntegerField('Кол-во в магазине')
 
+
 class FormAddOption(Form):
-    name = TextField(u'Название', validators = [
+    name = TextField(u'Название', validators=[
         v.Required(),
-        v.Length(max=64), 
+        v.Length(max=64),
         v.Regexp('^[\w\ \-]+$', flags=re.UNICODE)])
     description = TextField(u'Описание', validators=[
         v.Length(max=512),
-        ])
+    ])
     param_type = SelectField(u'param_type', choices=[
         ('Text', u'Текст'),
         ('Integer', u'Целое число'),
         ('Float', u'Дробное число'),
         ('List', u'Список')
-        ])
-    values = TextField(u'Список значений', validators = [
+    ])
+    values = TextField(u'Список значений', validators=[
         v.Length(max=128)])
-    dimension = TextField(u'Ед. Измерения', validators = [
+    dimension = TextField(u'Ед. Измерения', validators=[
         v.Length(max=8)])
     min = IntegerField(u'Мин.', validators=[v.Optional()])
     max = IntegerField(u'Макс.', validators=[v.Optional()])
