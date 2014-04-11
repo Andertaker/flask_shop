@@ -6,9 +6,11 @@ class Category(db.Model):
     __tablename__ = 'category'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
+    name = db.Column(db.String(64), nullable=False)
     picture = db.Column(db.String(128))
-    parent = db.Column(db.Integer)
+    parent = db.Column(db.Integer, nullable=False)
+    alias = db.Column(db.String(128), nullable=False)
+    description = db.Column(db.String(512), nullable=False)
     level = db.Column(db.Integer)
     items = db.relationship('Item', backref='cat', lazy='dynamic')
     options = db.relationship('ParamRel', backref='pr', lazy='dynamic')

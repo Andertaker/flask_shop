@@ -3,7 +3,6 @@ from flask import render_template, redirect, request, jsonify, url_for
 from app import app, db, models, forms
 import gets
 import json
-#import api_catalog
 
 
 @app.errorhandler(404)
@@ -28,46 +27,6 @@ def index():
 def success():
     return render_template('success.html')
 
-
-@app.route('/additem_ajax', methods=['GET', 'POST'])
-def additem_ajax():
-    if request.is_xhr:
-        req_json = json.loads(list(request.form)[0])
-        name = req_json['name']
-        price = int(req_json['price'])
-        description = req_json['description']
-        category = int(req_json['category'])
-        c = models.Item(name=u'' + name,
-                        description=u'' + description,
-                        price=price,
-                        cat_id=category)
-        db.session.add(c)
-        db.session.commit()
-        item_id = c.id
-
-        #добавляем опцию к айтему
-        type_options = ['value_text', 'value_int', 'value_float', 'value_bool']
-        for option in req_json['options']:
-            param = {'value_text': '', 'value_int': '', 'value_float': 0, 'value_bool': False}
-            for t in type_options:
-                try:
-                    param[t] = req_json['options'][option][t]
-                except:
-                    pass
-            c = models.ParamValue(value_text = u'' + param['value_text'],
-                                value_float = param['value_float'],
-                                value_int = param['value_int'],
-                                value_bool = param['value_bool'],
-                                item_id = item_id,
-                                param_id = int(option))  
-            db.session.add(c)
-            db.session.commit()  
-
-        return jsonify(result='succes!')
-    else:
-        return render_template('additem_ajax.html')
-
-
 @app.route('/cat/<int:cat_id>')
 def cat(cat_id):
     category = models.Category.query.get(cat_id)
@@ -86,33 +45,6 @@ def cat(cat_id):
 def item(item_id):
     item = models.Item.query.get(item_id)
     return render_template('item.html', item=item)
-
-@app.route('/addcategory', methods=['GET', 'POST'])
-def addcategory():
-    form = forms.FormAddCategory()
-    if form.validate_on_submit():
-        if form.parent.data == 0:
-            level = 1
-        else:
-            level = models.Category.query.get(form.parent.data).level + 1
-        
-        params = [int(x) for x in form.params.data.split('|')]
-        print params
-        c = models.Category(name=u'%s' % form.name.data,
-                            picture=u'%s' % form.picture.data,
-                            parent=form.parent.data,
-                            level=level
-                            )
-        db.session.add(c)
-        db.session.commit()
-        temp = c.id #здесь храним id только что созданной категории
-        for param in params:
-            c = models.ParamRel(cat_id=temp, param_id=param)
-            db.session.add(c)
-            db.session.commit()
-
-        return redirect(url_for('success'))
-    return render_template('addcat.html', form=form)
 
 @app.route('/addoption', methods=['GET', 'POST'])
 def addoption():
@@ -148,18 +80,6 @@ def additem():
 
     return render_template('additem.html', form=form)
 
-@app.route('/get', methods=['GET'])
-def get():
-    types = {'category': gets.category,
-            'items': gets.items}
-    if request.is_xhr:
-        obj = request.args.get('obj', 'undefined', type=str)
-        of = request.args.get('of', 'undefined', type=str)
-        group_by = request.args.get('group_by', 'undefined', type=id)
-        try:
-            return jsonify(response=types[obj](of=of, group_by=group_by))
-        except:
-            return jsonify(response='error')
 
 def get_option():
     result = []
@@ -197,4 +117,63 @@ def api(method):
         return 'NOT AJAX!'
 
 
+@app.route('/backend/category')
+def get_category_list():
+    if request.is_xhr:
+        query = models.Category.query.all()
+        result = []
+        if type(query) != list:
+            query = [query]
+        for record in query:
+            out = {}
+            out['id'] = record.id
+            out['alias'] = record.alias
+            out['name'] = record.name
+            out['parent'] = record.parent
+            result.append(out)
+        return jsonify(response=result), 200
+    else: 
+        return 'Request is not xhr', 400
 
+@app.route('/backend/category/<int:parent>', methods=['POST'])
+def new_category(parent=0):
+    if request.is_xhr and request.method == 'POST':
+        req_json = request.form
+        alias = 'first-category'
+        if parent != 0:
+            alias = 'sub-category'
+        c = models.Category(
+            name = u'' + req_json['name'],
+            parent = parent,
+            description = u'' + req_json['body'],
+            alias = u'' + alias
+            )
+        db.session.add(c)
+        db.session.commit()
+        return 'Created', 201
+    else:
+        return 'Request is not xhr', 400
+
+
+@app.route('/backend/category/<int:category_id>', methods=['PUT'])
+def update_category(category_id):
+    if request.methods = 'PUT':
+        req_json = request.form
+        c = models.Category.query.get(category_id)
+        c.name = req_json['name']
+        c.description = req_json['body']
+        db.session.commit()
+        return 'Updated', 200
+    else:
+        return 'Not Found', 404
+
+
+@app.route('/backend/category/<int:category_id>', methods=['DELETE'])
+def delete_category(category_id):
+    if request.method == 'DELETE':
+        c = models.Category.get(category_id)
+        db.session.delete(c)
+        db.commit()
+        return 'Deleted', 200
+    else:
+        return 'error', 404
