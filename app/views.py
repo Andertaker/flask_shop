@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, redirect, request, jsonify, url_for
+
 from app import app, db, models, forms
-import gets
-import json
+
+import database
+
+API_PATH = '/api'
 
 
 @app.errorhandler(404)
@@ -26,19 +29,6 @@ def index():
 @app.route('/success')
 def success():
     return render_template('success.html')
-
-
-@app.route('/cat/<int:cat_id>')
-def cat(cat_id):
-    category = models.Category.query.get(cat_id)
-    child_categories = models.Category.query.filter(
-        models.Category.parent.endswith(cat_id))
-    options = [(models.CatalogParam.query.get(x.param_id)) for x in category.options]
-    tree_cat = get_ier(category)
-    return render_template('cat.html',
-                           category=category,
-                           child_categories=child_categories,
-                           tree_cat=tree_cat, options=options)
 
 
 @app.route('/item/<int:item_id>')
@@ -94,57 +84,38 @@ def get_ier(category):
     return result
 
 
-@app.route('/backend/category')
+@app.route(API_PATH + '/category')
 def get_category_list():
     if request.is_xhr:
-        query = models.Category.query.all()
-        result = []
-        if type(query) != list:
-            query = [query]
-        for record in query:
-            out = {'id': record.id, 'alias': record.alias, 'name': record.name, 'parent': record.parent}
-            result.append(out)
-        return jsonify(response=result), 200
+        return jsonify(response=database.get_category_list()), 200
     else:
         return 'Request is not xhr', 400
 
 
-@app.route('/backend/category/<int:parent>', methods=['POST'])
+@app.route(API_PATH + '/category/<int:parent>', methods=['POST'])
 def new_category(parent=0):
-    if request.is_xhr and request.method == 'POST':
+    if request.is_xhr:
         req_json = request.form
-        alias = 'first-category'
-        if parent != 0:
-            alias = 'sub-category'
-        c = models.Category(
-            name=u'' + req_json['name'],
-            parent=parent,
-            description=u'' + req_json['body'],
-            alias=u'' + alias
-        )
-        db.session.add(c)
-        db.session.commit()
+        database.new_category(parent, req_json['name'], req_json['body'], req_json['alias'])
         return 'Created', 201
     else:
         return 'Request is not xhr', 400
 
 
-@app.route('/backend/category/<int:category_id>', methods=['PUT'])
+@app.route(API_PATH + '/category/<int:category_id>', methods=['PUT'])
 def update_category(category_id):
-    req_json = request.form
-    c = models.Category.query.get(category_id)
-    c.name = req_json['name']
-    c.description = req_json['body']
-    db.session.commit()
-    return 'Updated', 200
+    if request.is_xhr:
+        req_json = request.form
+        database.update_category(category_id, req_json['name'], req_json['body'], req_json['alias'])
+        return 'Updated', 200
+    else:
+        return 'Request is not xhr', 400
 
 
-@app.route('/backend/category/<int:category_id>', methods=['DELETE'])
+@app.route(API_PATH + '/category/<int:category_id>', methods=['DELETE'])
 def delete_category(category_id):
-    if request.method == 'DELETE':
-        c = models.Category.get(category_id)
-        db.session.delete(c)
-        db.commit()
+    if request.is_xhr:
+        database.delete_category(category_id)
         return 'Deleted', 200
     else:
         return 'error', 404
