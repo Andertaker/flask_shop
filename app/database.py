@@ -4,12 +4,12 @@ from app import models, db
 
 def add_commit(c):
     db.session.add(c)
-    db.commit()
+    db.session.commit()
 
 
 def delete_commit(c):
     db.session.delete(c)
-    db.commit()
+    db.session.commit()
 
 
 def get_category_list():
@@ -59,8 +59,6 @@ def new_item(category_id, name, body, price):
 def get_item_list(category_id):
     query = models.Item.query.filter_by(cat_id=category_id)
     result = []
-    if type(query) != list:
-        query = [query]
     for record in query:
         out = {
             'id': record.id,
@@ -68,8 +66,6 @@ def get_item_list(category_id):
             'name': record.name,
             'category_id': record.cat_id,
             'description': record.description,
-            'counter_warehouse': record.counter_warehouse,
-            'counter_shop': record.counter_shop
         }
         result.append(out)
     return result
@@ -89,13 +85,14 @@ def get_item(item_id):
     }
     return out
 
+
 def update_item(item_id, name, body):
     c = models.Item.query.get(item_id)
     c.name = u'' + name
     c.body = u'' + body
     db.session.commit()
 
+
 def delete_item(item_id):
     c = models.Item.query.get(item_id)
     delete_commit(c)
-
