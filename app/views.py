@@ -55,24 +55,6 @@ def addoption():
     return render_template('addoption.html', form=form)
 
 
-@app.route('/additem', methods=['GET', 'POST'])
-def additem():
-    form = forms.FormAddItem()
-    if form.validate_on_submit():
-        c = models.Item(name=u'' + form.name.data,
-                        picture=form.picture.data,
-                        description=u'' + form.description.data,
-                        price=form.price.data,
-                        cat_id=form.cat_id.data,
-                        counter_warehouse=form.counter_warehouse.data,
-                        counter_shop=form.counter_shop.data)
-        db.session.add(c)
-        db.session.commit()
-        return redirect(url_for('success'))
-
-    return render_template('additem.html', form=form)
-
-
 def get_ier(category):
     result = []
     temp = category
@@ -119,3 +101,47 @@ def delete_category(category_id):
         return 'Deleted', 200
     else:
         return 'error', 404
+
+
+@app.route(API_PATH + '/category/<int:category_id>/item', methods=['POST'])
+def new_item(category_id=0):
+    if request.is_xhr:
+        req_json = request.form
+        database.new_item(category_id, req_json['name'], req_json['body'], req_json['price'])
+        return 'created', 201
+    else:
+        return 'request is not xhr', 400
+
+
+@app.route(API_PATH + '/category/<int:category_id>/item')
+def get_item_list(category_id):
+    if request.is_xhr:
+        return jsonify(response=database.get_item_list(category_id)), 200
+    else:
+        return 'Request is not xhr'
+
+
+@app.route(API_PATH + '/category/<int:category_id>/item/<int:item_id>')
+def get_item(category_id, item_id):
+    if request.is_xhr:
+        return jsonify(response=database.get_item(item_id))
+    else:
+        return 'request is not xhr'
+
+@app.route(API_PATH + '/category/<int:category_id>/item/<int:item_id>', methods=['PUT'])
+def update_item(category_id, item_id):
+    if request.is_xhr:
+        req_json = request.form
+        database.update_item(item_id, req_json['name'], req_json['body'])
+        return 'OK', 200
+    else:
+        return 'request is not xhr', 400
+
+
+@app.route(API_PATH + '/category/<int:category_id>/item/<int:item_id>', methods=['DELETE'])
+def delete_item(item_id):
+    if request.is_xhr:
+        database.delete_item(item_id)
+        return 'deleted', 200
+    else:
+        return 'Request is not xhr', 400

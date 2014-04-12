@@ -24,11 +24,11 @@ class Item(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
-    picture = db.Column(db.String(128))
+    picture = db.Column(db.String(128), nullable=True)
     description = db.Column(db.String(1024))
-    price = db.Column(db.Integer)
-    counter_warehouse = db.Column(db.Integer)  # кол-во на складе
-    counter_shop = db.Column(db.Integer)  # кол-во в магазине
+    price = db.Column(db.Integer, deafult=0)
+    counter_warehouse = db.Column(db.Integer, default=0)  # кол-во на складе
+    counter_shop = db.Column(db.Integer, default=0)  # кол-во в магазине
     cat_id = db.Column(db.Integer, db.ForeignKey('category.id'))
 
     def __repr__(self):
