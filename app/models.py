@@ -38,6 +38,7 @@ class Item(db.Model):
 class CatalogParam(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
+    alias = db.Column(db.String(64), nullable=False)
     description = db.Column(db.String(512), nullable=True)
     param_type = db.Column(db.Enum(u'Text', u'Integer', u'Float', u'Bool', name='types'))
     values = db.Column(db.String(256), nullable=True)

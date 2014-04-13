@@ -56,8 +56,13 @@ def new_item(category_id, name, body, price):
     add_commit(c)
 
 
-def get_item_list(category_id):
-    query = models.Item.query.filter_by(cat_id=category_id)
+def get_item_list(category_id, offset, limit, order_by):
+    order_dict = {
+        'id': models.Item.id,
+        'price': models.Item.price,
+        'name': models.Item.name
+    }
+    query = models.Item.query.filter_by(cat_id=category_id).order_by(order_dict[order_by]).limit(limit).offset(offset)
     result = []
     for record in query:
         out = {
@@ -96,3 +101,33 @@ def update_item(item_id, name, body):
 def delete_item(item_id):
     c = models.Item.query.get(item_id)
     delete_commit(c)
+
+
+def new_option(name, description, type, alias):
+    c = models.CatalogParam(
+        name = name,
+        description = description,
+        param_type = type,
+        alias = alias
+    )
+    add_commit(c)
+
+
+def get_options_list():
+    query = models.CatalogParam.query.all()
+    result = []
+    if type(query) != list:
+        query = [query]
+    for record in query:
+        out = {'id': record.id, 'alias': record.alias, 'name': record.name, 'type': record.param_type,
+               'description': record.descriptionS}
+        result.append(out)
+    return result
+
+def update_option(option_id, name, description, type, alias):
+    c = models.CatalogParam.get(option_id)
+    c.name = u'' + name
+    c.description = u'' + description
+    c.type = u'' + type
+    c.alias = u'' + alias
+    db.session.commit()
