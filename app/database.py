@@ -77,7 +77,6 @@ def get_item_list(category_id, offset, limit, order_by):
 
 
 def get_item(item_id):
-    #переписать, чтобы возвращал только если товар есть в указанной категории
     query = models.Item.query.get(item_id)
     out = {
         'id': query.id,
@@ -103,12 +102,12 @@ def delete_item(item_id):
     delete_commit(c)
 
 
-def new_option(name, description, type, alias):
+def new_option(name, description, param_type, alias):
     c = models.CatalogParam(
-        name = name,
-        description = description,
-        param_type = type,
-        alias = alias
+        name=u'' + name,
+        description=u'' + description,
+        param_type=u'' + param_type,
+        alias=u'' + alias
     )
     add_commit(c)
 
@@ -116,18 +115,32 @@ def new_option(name, description, type, alias):
 def get_options_list():
     query = models.CatalogParam.query.all()
     result = []
-    if type(query) != list:
-        query = [query]
     for record in query:
-        out = {'id': record.id, 'alias': record.alias, 'name': record.name, 'type': record.param_type,
-               'description': record.descriptionS}
+        out = {
+            'id': record.id,
+            'name': record.name,
+            'type': record.param_type,
+            'description': record.description,
+            'alias': record.alias
+        }
         result.append(out)
     return result
 
-def update_option(option_id, name, description, type, alias):
-    c = models.CatalogParam.get(option_id)
+
+def update_option(option_id, name, description, param_type, alias):
+    c = models.CatalogParam.query.get(option_id)
     c.name = u'' + name
     c.description = u'' + description
-    c.type = u'' + type
+    c.param_type = u'' + param_type
     c.alias = u'' + alias
     db.session.commit()
+
+
+def delete_option(option_id):
+    c = models.CatalogParam.query.get(option_id)
+    delete_commit(c)
+
+
+def add_option_to_category(category_id, param_id):
+    c = models.ParamRel(cat_id=category_id, param_id=param_id)
+    add_commit(c)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, url_for
 
 from app import app
 
@@ -9,7 +9,7 @@ API_PATH = '/api'
 
 
 @app.errorhandler(404)
-def error404():
+def error404(err):
     return render_template('404.html'), 404
 
 
@@ -101,6 +101,7 @@ def get_item_list(category_id):
         return 'Request is not xhr', 404
 
 
+#получение информации по товару в категории
 @app.route(API_PATH + '/category/<int:category_id>/item/<int:item_id>')
 def get_item(category_id, item_id):
     if request.is_xhr:
@@ -112,6 +113,7 @@ def get_item(category_id, item_id):
         return 'request is not xhr', 404
 
 
+#обновление товара
 @app.route(API_PATH + '/category/<int:category_id>/item/<int:item_id>', methods=['PUT'])
 def update_item(category_id, item_id):
     if request.is_xhr:
@@ -125,6 +127,7 @@ def update_item(category_id, item_id):
         return 'Request is not xhr', 404
 
 
+#удаление айтема
 @app.route(API_PATH + '/category/<int:category_id>/item/<int:item_id>', methods=['DELETE'])
 def delete_item(item_id):
     if request.is_xhr:
@@ -137,7 +140,8 @@ def delete_item(item_id):
         return 'Request is not xhr', 404
 
 
-@app.route(API_PATH + '/options', method=['POST'])
+#добавление новой опции
+@app.route(API_PATH + '/options', methods=['POST'])
 def new_option():
     if request.is_xhr:
         try:
@@ -150,7 +154,8 @@ def new_option():
         return 'Request is not xhr', 404
 
 
-@app.route(API_PATH + '/options', method=['GET'])
+#получение списка опций
+@app.route(API_PATH + '/options')
 def get_options_list():
     if request.is_xhr:
         try:
@@ -161,12 +166,38 @@ def get_options_list():
         return 'Request is not xhr', 404
 
 
-@app.route(API_PATH + '/options/<int:option_id>', method=['PUT'])
+#ообновление опции
+@app.route(API_PATH + '/options/<int:option_id>', methods=['PUT'])
 def update_option(option_id):
     if request.is_xhr:
         try:
             req_json = request.form
             database.update_option(option_id, req_json['name'], req_json['body'], req_json['type'], req_json['alias'])
+            return 'OK', 200
+        except:
+            return 'Bad Request', 400
+    else:
+        return 'Request is not xhr', 404
+
+
+#Удаление опции
+@app.route(API_PATH + '/options/<int:option_id>', methods=['DELETE'])
+def delete_option(option_id):
+    if request.is_xhr:
+        try:
+            database.delete_option(option_id)
+            return 'deleted', 200
+        except:
+            return 'Bad Request', 400
+    else:
+        return 'Request is not xhr', 404
+
+#Привязка опции к категории
+@app.route(API_PATH + '/category/<int:category_id>/options/<int:param_id>', methods=['POST'])
+def add_option_to_category(category_id, param_id):
+    if request.is_xhr:
+        try:
+            database.add_option_to_category(category_id, param_id)
             return 'OK', 200
         except:
             return 'Bad Request', 400

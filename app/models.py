@@ -38,20 +38,26 @@ class Item(db.Model):
 class CatalogParam(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
-    alias = db.Column(db.String(64), nullable=False)
+    alias = db.Column(db.String(64), nullable=True)
     description = db.Column(db.String(512), nullable=True)
     param_type = db.Column(db.Enum(u'Text', u'Integer', u'Float', u'Bool', name='types'))
     values = db.Column(db.String(256), nullable=True)
-    dimension = db.Column(db.String(8))
+    dimension = db.Column(db.String(8), nullable=True)
     min = db.Column(db.Integer, nullable=True)
     max = db.Column(db.Integer, nullable=True)
-    to_filter = db.Column(db.Boolean)
+    to_filter = db.Column(db.Boolean, nullable=True)
+
+    def __repr__(self):
+        print '%s | %s' % (self.id, self.name)
 
 
 class ParamRel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cat_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     param_id = db.Column(db.Integer)
+
+    def __repr__(self):
+        print '%s | %s' % (self.id, self.name)
 
 
 class ParamValue(db.Model):
@@ -62,3 +68,6 @@ class ParamValue(db.Model):
     value_bool = db.Column(db.Boolean)
     item_id = db.Column(db.Integer)
     param_id = db.Column(db.Integer)
+
+    def __repr__(self):
+        print '%s | %s' % (self.id, self.name)
