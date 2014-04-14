@@ -144,3 +144,19 @@ def delete_option(option_id):
 def add_option_to_category(category_id, param_id):
     c = models.ParamRel(cat_id=category_id, param_id=param_id)
     add_commit(c)
+
+
+def get_options_of_category(category_id):
+    options_list = [x.param_id for x in models.ParamRel.query.filter_by(cat_id=category_id).all()]
+    result = []
+    for options_id in options_list:
+        query = models.CatalogParam.query.get(options_id)
+        out = {
+            'id': query.id,
+            'description': query.description,
+            'alias': query.alias,
+            'name': query.name,
+            'param_type': query.param_type
+        }
+        result.append(out)
+    return result

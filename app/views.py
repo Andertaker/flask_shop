@@ -24,6 +24,7 @@ def index():
     return render_template('index.html', categories=category)
 
 
+#обработку ошибок перепишу чуть позже
 #Ниже описан REST api
 @app.route(API_PATH + '/category')
 def get_category_list():
@@ -192,6 +193,7 @@ def delete_option(option_id):
     else:
         return 'Request is not xhr', 404
 
+
 #Привязка опции к категории
 @app.route(API_PATH + '/category/<int:category_id>/options/<int:param_id>', methods=['POST'])
 def add_option_to_category(category_id, param_id):
@@ -199,6 +201,18 @@ def add_option_to_category(category_id, param_id):
         try:
             database.add_option_to_category(category_id, param_id)
             return 'OK', 200
+        except:
+            return 'Bad Request', 400
+    else:
+        return 'Request is not xhr', 404
+
+
+#получает опции заданной категории
+@app.route(API_PATH + '/category/<int:category_id>/options')
+def get_options_of_category(category_id):
+    if request.is_xhr:
+        try:
+            return jsonify(response=database.get_options_of_category(category_id))
         except:
             return 'Bad Request', 400
     else:
