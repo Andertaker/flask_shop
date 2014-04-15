@@ -217,3 +217,17 @@ def get_options_of_category(category_id):
             return 'Bad Request', 400
     else:
         return 'Request is not xhr', 404
+
+
+#добавляет параметры опций к товару
+@app.route(API_PATH + '/category/<int:category_id>/items/<int:item_id>/options/<int:param_id>', methods=['POST'])
+def add_param_to_item(category_id, item_id, param_id):
+    if request.is_xhr:
+        #try:
+        req_json = request.form
+        database.add_option_to_item(category_id, item_id, param_id, req_json['value'])
+        return 'OK', 200
+        #except:
+        #    return 'Bad Request', 400
+    else:
+        return 'Request is not xhr', 404

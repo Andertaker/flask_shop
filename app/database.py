@@ -64,6 +64,7 @@ def get_item_list(category_id, offset, limit, order_by):
     }
     query = models.Item.query.filter_by(cat_id=category_id).order_by(order_dict[order_by]).limit(limit).offset(offset)
     result = []
+    options = [x.param_id for x in models.ParamRel.query.filter_by(cat_id=category_id)]
     for record in query:
         out = {
             'id': record.id,
@@ -160,3 +161,30 @@ def get_options_of_category(category_id):
         }
         result.append(out)
     return result
+
+
+def add_option_to_item(category_id, item_id, param_id, value):
+    type_of_option = models.CatalogParam.query.get(param_id).param_type
+
+    value_bool = None
+    value_float = None
+    value_int = None
+    value_text = None
+
+    if type_of_option == 'Text':
+        value_text = value
+    elif type_of_option == 'Integer':
+        value_int = value
+    elif type_of_option == 'Float':
+        value_float = value
+    else:
+        value_bool = value
+
+    c = models.ParamValue(
+        param_id=param_id,
+        item_id=item_id,
+        value_float=value_float,
+        value_int=int(value_int),
+        value_text=value_text,
+        value_bool=value_bool)
+    add_commit(c)

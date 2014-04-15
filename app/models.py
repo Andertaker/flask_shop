@@ -62,12 +62,12 @@ class ParamRel(db.Model):
 
 class ParamValue(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    value_text = db.Column(db.String(64))
-    value_int = db.Column(db.Integer)
-    value_float = db.Column(db.Float)
-    value_bool = db.Column(db.Boolean)
-    item_id = db.Column(db.Integer)
-    param_id = db.Column(db.Integer)
+    value_text = db.Column(db.String(64), nullable=True)
+    value_int = db.Column(db.Integer, nullable=True)
+    value_float = db.Column(db.Float, nullable=True)
+    value_bool = db.Column(db.Boolean, nullable=True)
+    item_id = db.Column(db.Integer, nullable=False)
+    param_id = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         print '%s | %s' % (self.id, self.name)
