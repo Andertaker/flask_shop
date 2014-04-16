@@ -46,6 +46,7 @@ class CatalogParam(db.Model):
     min = db.Column(db.Integer, nullable=True)
     max = db.Column(db.Integer, nullable=True)
     to_filter = db.Column(db.Boolean, nullable=True)
+    rel = db.relationship('ParamRel', backref='param')
 
     def __repr__(self):
         print '%s | %s' % (self.id, self.name)
@@ -54,7 +55,7 @@ class CatalogParam(db.Model):
 class ParamRel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cat_id = db.Column(db.Integer, db.ForeignKey('category.id'))
-    param_id = db.Column(db.Integer)
+    param_id = db.Column(db.Integer, db.ForeignKey('catalog_param.id'))
 
     def __repr__(self):
         print '%s | %s' % (self.id, self.name)
@@ -66,8 +67,8 @@ class ParamValue(db.Model):
     value_int = db.Column(db.Integer, nullable=True)
     value_float = db.Column(db.Float, nullable=True)
     value_bool = db.Column(db.Boolean, nullable=True)
-    item_id = db.Column(db.Integer, nullable=False)
-    param_id = db.Column(db.Integer, nullable=False)
+    item_id = db.Column(db.Integer, db.ForeignKey('item.id'), nullable=False)
+    param_id = db.Column(db.Integer, db.ForeignKey('catalog_param.id'), nullable=False)
 
     def __repr__(self):
         print '%s | %s' % (self.id, self.name)

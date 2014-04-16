@@ -63,9 +63,14 @@ def get_item_list(category_id, offset, limit, order_by):
         'name': models.Item.name
     }
     query = models.Item.query.filter_by(cat_id=category_id).order_by(order_dict[order_by]).limit(limit).offset(offset)
+    #options_of_category = [x.param_id for x in models.ParamRel.query.filter_by(cat_id=category_id)]
+    #options_value = models.ParamValue.query.all()
+    #print options_value
+    rel = models.ParamRel.query.filter_by(cat_id=category_id)
+
     result = []
-    options = [x.param_id for x in models.ParamRel.query.filter_by(cat_id=category_id)]
     for record in query:
+
         out = {
             'id': record.id,
             'price': record.price,
@@ -77,8 +82,36 @@ def get_item_list(category_id, offset, limit, order_by):
     return result
 
 
+def options_value(category_id, item_id):
+    values = models.ParamValue.query.filter_by(item_id=item_id)
+    param = []
+    for value in values:
+        out = {}
+        info = get_options_info(value.param_id)
+        if info['type_param'] == 'Integer':
+            out['value'] = value.value_int
+        elif info['type_param'] == 'Text':
+            out['value'] = value.value_text
+        elif info['type_param'] == 'Float':
+            out['value'] = value.value_float
+        else:
+            out['value'] = value.value_bool
+        out['name'] = value.name
+        param.append(out)
+    return param
+
+def get_options_info(param_id):
+    option = models.CatalogParam.query.get(param_id)
+    info = {
+        'name': option.name,
+        'param_type': option.param_type,
+        'alias': option.values,
+    }
+    return info
+
 def get_item(item_id):
     query = models.Item.query.get(item_id)
+    options_value(1,1)
     out = {
         'id': query.id,
         'price': query.price,
@@ -86,7 +119,7 @@ def get_item(item_id):
         'category_id': query.cat_id,
         'description': query.description,
         'counter_warehouse': query.counter_warehouse,
-        'counter_shop': query.counter_shop
+        'counter_shop': query.counter_shop,
     }
     return out
 
@@ -122,7 +155,7 @@ def get_options_list():
             'name': record.name,
             'type': record.param_type,
             'description': record.description,
-            'alias': record.alias
+            'alias': record.alias,
         }
         result.append(out)
     return result
