@@ -1,5 +1,6 @@
 
-from app import app
+from magazine import app
+from config import HOST
 
 if __name__ == '__main__':
-    app.run(host='0')
+    app.run(host=HOST)
