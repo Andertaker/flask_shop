@@ -1,5 +1,5 @@
 
-from magazine import app
+from shop import app
 from config import HOST
 
 if __name__ == '__main__':
